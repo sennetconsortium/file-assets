@@ -1,0 +1,32 @@
+version: "3.7"
+
+services:
+  file-assets:
+    build:
+      context: .
+    image: file-assets
+    hostname: file-assets
+    container_name: file-assets-container
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "--fail", "http://localhost:8080"]
+      interval: 1m30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    environment:
+      - HOST_GID=${HOST_GID:-1002}
+      - HOST_UID=${HOST_UID:-1002}
+    init: true
+    restart: always
+    volumes:
+      # Mount conf.d on host machine to the nginx conf.d on container
+      - "./nginx/conf.d:/etc/nginx/conf.d"
+      - "../../../codcc-dev-test/data-dev:/assets"
+    networks:
+      - sennet_docker_network
+
+networks:
+  sennet_docker_network:
+    external: true
