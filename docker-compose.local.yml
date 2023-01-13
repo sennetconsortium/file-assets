@@ -1,0 +1,8 @@
+version: "3.7"
+
+services:
+  file-assets:
+    volumes:
+      # Mount conf.d on host machine to the nginx conf.d on container
+      - "./nginx/local/conf.d:/etc/nginx/conf.d"
+      - "../../../codcc-dev-test/data-dev:/Users/SLS325/codcc-dev-test/data-dev"
