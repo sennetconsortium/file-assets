@@ -47,27 +47,23 @@ def lambda_handler(event, context):
         # This is only needed when running on AWS
         print(json.dumps(event, indent=4).replace('\n', '\r'))
 
-    bearer_token = event['headers']['Authorization']
+    bearer_token = event['headers']['authorization']
     # Remove the `Bearer ` part of the token
     token = bearer_token[7:]
 
-    path = event['path'].strip('/')
+    path = event['headers']['x-original-uri'].strip('/')
     asset_id, file_name = path.split('/')
     print('Asset ID: ' + asset_id)
     print('File name: ' + file_name)
 
     access = get_file_access(asset_id, token, None)
     if access == 200:
-        effect = 'Allow'
+        result = 'Allow'
     else:
-        effect = 'Deny'
+        result = 'Deny'
 
-    principal_id = "default_user|a1b2c3d4"
-    method_arn = event['methodArn']
-    policy = AuthPolicy(principal_id, effect, method_arn)
-    auth_response = policy.build()
-    print('RESULT: ' + effect)
-    return auth_response
+    print('RESULT: ' + result)
+    return result
 
 
 def make_api_request_get(target_url):
@@ -413,40 +409,3 @@ def get_entity_uuid_by_file_uuid(uuid):
     # Return the entity uuid string, if the entity is AVR, and 
     # if the given uuid is a file uuid or not (bool)
     return entity_uuid, entity_is_avr, given_uuid_is_file_uuid
-
-
-# https://docs.aws.amazon.com/apigateway/latest/developerguide/api-gateway-lambda-authorizer-output.html
-# A Lambda authorizer function's output is a dictionary-like object, which must include
-# the principal identifier (principalId) and a policy document (policyDocument) containing a list of policy statements.
-class AuthPolicy(object):
-    # The principal used for the policy, this should be a unique identifier for the end user
-    principal_id = ""
-
-    # The policy version used for the evaluation. This should always be '2012-10-17'
-    version = "2012-10-17"
-
-    effect = ""
-
-    method_arn = ""
-
-    def __init__(self, principal_id, effect, method_arn):
-        self.principal_id = principal_id
-        self.effect = effect
-        self.method_arn = method_arn
-
-    def build(self):
-        policy = {
-            'principalId': self.principal_id,
-            'policyDocument': {
-                'Version': self.version,
-                'Statement': [
-                    {
-                        'Action': 'execute-api:Invoke',
-                        'Effect': self.effect,
-                        'Resource': self.method_arn
-                    }
-                ]
-            }
-        }
-
-        return policy

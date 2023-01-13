@@ -1,87 +1,42 @@
 {
-    "type": "REQUEST",
-    "methodArn": "arn:aws:execute-api:us-east-1:557310757627:a59omjria4/DEV/GET/02a93db2ef7fd8acfc3f66eb70fd037a/genome_build.json",
-    "resource": "/{myProxy+}",
-    "path": "/02a93db2ef7fd8acfc3f66eb70fd037a/genome_build.json",
-    "httpMethod": "ANY",
+    "version": "2.0",
+    "routeKey": "$default",
+    "rawPath": "/",
+    "rawQueryString": "",
     "headers": {
-        "Accept": "*/*",
-        "Accept-Encoding": "gzip, deflate, br",
-        "Authorization": "Bearer AgqKWQKQyq3EdGqb41xwEE38njeXywvnje7vYEd91l1wjda4xvuqC3mJ3w21Ya9VkbEG0BQo5rwNkqc5Q4NKrFGm9G9",
-        "Host": "a59omjria4.execute-api.us-east-1.amazonaws.com",
-        "Postman-Token": "9c246992-eede-4b31-b36d-2472bf5e50bd",
-        "User-Agent": "PostmanRuntime/7.30.0",
-        "X-Amzn-Trace-Id": "Root=1-63c18961-1e358a7a78306e9a10a999aa",
-        "X-Forwarded-For": "96.236.205.251",
-        "X-Forwarded-Port": "443",
-        "X-Forwarded-Proto": "https"
+        "x-amzn-tls-version": "TLSv1.2",
+        "x-forwarded-proto": "https",
+        "postman-token": "520b836b-00de-46f6-9105-e70f205e86c6",
+        "x-forwarded-port": "443",
+        "x-forwarded-for": "172.21.0.1",
+        "accept": "*/*",
+        "authorization": "Bearer AgqKWQKQyq3EdGqb41xwEE38njeXywvnje7vYEd91l1wjda4xvuqC3mJ3w21Ya9VkbEG0BQo5rwNkqc5Q4NKrFGm9G9",
+        "x-real-ip": "172.21.0.1",
+        "x-amzn-tls-cipher-suite": "ECDHE-RSA-AES128-GCM-SHA256",
+        "x-amzn-trace-id": "Root=1-63c1d024-30e5413648a7b0d03164a543",
+        "host": "lmg2h2pvsiklztrznerfap4zce0blwfu.lambda-url.us-east-1.on.aws",
+        "x-original-request-method": "GET",
+        "x-original-uri": "/02a93db2ef7fd8acfc3f66eb70fd037a/genome_build.json",
+        "accept-encoding": "gzip, deflate, br",
+        "user-agent": "PostmanRuntime/7.30.0"
     },
-    "multiValueHeaders": {
-        "Accept": [
-            "*/*"
-        ],
-        "Accept-Encoding": [
-            "gzip, deflate, br"
-        ],
-        "Authorization": [
-            "Bearer AgqKWQKQyq3EdGqb41xwEE38njeXywvnje7vYEd91l1wjda4xvuqC3mJ3w21Ya9VkbEG0BQo5rwNkqc5Q4NKrFGm9G9"
-        ],
-        "Host": [
-            "a59omjria4.execute-api.us-east-1.amazonaws.com"
-        ],
-        "Postman-Token": [
-            "9c246992-eede-4b31-b36d-2472bf5e50bd"
-        ],
-        "User-Agent": [
-            "PostmanRuntime/7.30.0"
-        ],
-        "X-Amzn-Trace-Id": [
-            "Root=1-63c18961-1e358a7a78306e9a10a999aa"
-        ],
-        "X-Forwarded-For": [
-            "96.236.205.251"
-        ],
-        "X-Forwarded-Port": [
-            "443"
-        ],
-        "X-Forwarded-Proto": [
-            "https"
-        ]
-    },
-    "queryStringParameters": {},
-    "multiValueQueryStringParameters": {},
-    "pathParameters": {
-        "myProxy": "02a93db2ef7fd8acfc3f66eb70fd037a/genome_build.json"
-    },
-    "stageVariables": {},
     "requestContext": {
-        "resourceId": "8latlq",
-        "resourcePath": "/{myProxy+}",
-        "httpMethod": "GET",
-        "extendedRequestId": "esJnVF8EoAMF7SA=",
-        "requestTime": "13/Jan/2023:16:40:01 +0000",
-        "path": "/DEV/02a93db2ef7fd8acfc3f66eb70fd037a/genome_build.json",
-        "accountId": "557310757627",
-        "protocol": "HTTP/1.1",
-        "stage": "DEV",
-        "domainPrefix": "a59omjria4",
-        "requestTimeEpoch": 1673628001943,
-        "requestId": "fbbdeecd-f560-4531-a92e-89207e2aecde",
-        "identity": {
-            "cognitoIdentityPoolId": null,
-            "accountId": null,
-            "cognitoIdentityId": null,
-            "caller": null,
+        "accountId": "anonymous",
+        "apiId": "lmg2h2pvsiklztrznerfap4zce0blwfu",
+        "domainName": "lmg2h2pvsiklztrznerfap4zce0blwfu.lambda-url.us-east-1.on.aws",
+        "domainPrefix": "lmg2h2pvsiklztrznerfap4zce0blwfu",
+        "http": {
+            "method": "GET",
+            "path": "/",
+            "protocol": "HTTP/1.1",
             "sourceIp": "96.236.205.251",
-            "principalOrgId": null,
-            "accessKey": null,
-            "cognitoAuthenticationType": null,
-            "cognitoAuthenticationProvider": null,
-            "userArn": null,
-            "userAgent": "PostmanRuntime/7.30.0",
-            "user": null
+            "userAgent": "PostmanRuntime/7.30.0"
         },
-        "domainName": "a59omjria4.execute-api.us-east-1.amazonaws.com",
-        "apiId": "a59omjria4"
-    }
+        "requestId": "a60f1615-f17c-484e-8663-2b79c522261b",
+        "routeKey": "$default",
+        "stage": "$default",
+        "time": "13/Jan/2023:21:41:56 +0000",
+        "timeEpoch": 1673646116805
+    },
+    "isBase64Encoded": false
 }

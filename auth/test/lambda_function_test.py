@@ -8,11 +8,6 @@ with open('lambda_event.json') as f:
 enable_local_logging()
 
 
-def extract_auth_policy_effect(auth_policy):
-    effect = auth_policy['policyDocument']['Statement'][0]['Effect']
-    return effect
-
-
 # Given the user passes a valid groups token
 # Given they have `public` access level in the group which the dataset belongs to
 class TheUserHasPublicAccessLevel(unittest.TestCase):
@@ -20,9 +15,8 @@ class TheUserHasPublicAccessLevel(unittest.TestCase):
     # When they request a file from a `public` dataset
     # Then the auth policy effect will be `allow`
     def test_user_has_public_access_and_requests_a_public_file_expecting_auth_policy_effect_is_allow(self):
-        auth_policy = lambda_handler(event, None)
-        effect = extract_auth_policy_effect(auth_policy)
-        self.assertEqual('Allow', effect)
+        result = lambda_handler(event, None)
+        self.assertEqual('Allow', result)
 
     # When they request a file from a `consortium` dataset
     # Then the auth policy effect will be `deny`
