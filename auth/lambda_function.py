@@ -1,13 +1,41 @@
 import json
 
+is_local_logging = False
+
+
+def enable_local_logging():
+    global is_local_logging
+    is_local_logging = True
+
 
 def lambda_handler(event, context):
     print('Starting file-assets authorization ...')
+    print('Logging event ...')
+    if is_local_logging:
+        print(json.dumps(event, indent=4))
+    else:
+        # This enables a multiline string in one row of the Cloudwatch logs
+        # Otherwise each line of the JSON will be printed on a separate line in the logs
+        # This is only needed when running on AWS
+        print(json.dumps(event, indent=4).replace('\n', '\r'))
+
+    bearer_token = event['headers']['Authorization']
+    print('Logging token ...')
+    # Remove the `Bearer ` part of the token
+    token = bearer_token[7:]
+    print(token)
+    effect = 'Allow'
+
+    path = event['path'].strip('/')
+    asset_id, file_name = path.split('/')
+    print('Asset ID: ' + asset_id)
+    print('File name: ' + file_name)
+
     principal_id = "default_user|a1b2c3d4"
     method_arn = event['methodArn']
-    effect = 'Deny'
     policy = AuthPolicy(principal_id, effect, method_arn)
     auth_response = policy.build()
+    print('END file-assets authorization')
     return auth_response
 
 
