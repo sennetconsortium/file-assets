@@ -4,6 +4,8 @@ import time
 import os
 from hubmap_commons.hm_auth import AuthHelper
 from hubmap_commons.exceptions import HTTPException
+import urllib3
+urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 # Load environment variables
 GLOBUS_APP_CLIENT_ID = os.environ['GLOBUS_APP_CLIENT_ID']
@@ -265,7 +267,7 @@ def get_file_access(uuid, token_from_query, request):
             user_info = auth_helper_instance.getUserDataAccessLevel(final_request)
 
             print("======user_info======")
-            print(user_info)
+            print(json.dumps(user_info, indent=4))
         # If returns HTTPException with a 401, invalid header format or expired/invalid token
         except HTTPException as e:
             msg = "HTTPException from calling auth_helper_instance.getUserDataAccessLevel() HTTP code: " + str(
