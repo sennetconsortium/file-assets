@@ -2,71 +2,34 @@ import json
 import unittest
 from auth.lambda_function import lambda_handler, enable_local_logging
 
-with open('lambda_event.json') as f:
-    event = json.load(f)
+# A request for a consortium dataset with a token that has consortium access
+with open('request_for_consortium_dataset_with_consortium_level_token.json') as f:
+    consortium_dataset_with_consortium_token = json.load(f)
+
+# A request for a consortium dataset but no token is present
+with open('request_for_consortium_dataset_with_no_token.json') as f:
+    consortium_dataset_with_no_token = json.load(f)
+
+# A request for a protected dataset with a token that has consortium access
+with open('request_for_protected_dataset_with_consortium_level_token.json') as f:
+    protected_dataset_with_consortium_token = json.load(f)
 
 enable_local_logging()
 
 
-# Given the user passes a valid groups token
-# Given they have `public` access level in the group which the dataset belongs to
 class TheUserHasPublicAccessLevel(unittest.TestCase):
 
-    # When they request a file from a `public` dataset
-    # Then the auth policy effect will be `allow`
-    def test_user_has_public_access_and_requests_a_public_file_expecting_auth_policy_effect_is_allow(self):
-        result = lambda_handler(event, None)
-        self.assertEqual('Allow', result)
+    def test_the_token_has_consortium_access_with_a_request_for_a_consortium_file_expecting_status_code_200(self):
+        result = lambda_handler(consortium_dataset_with_consortium_token, None)
+        self.assertEqual(200, result['statusCode'])
 
-    # When they request a file from a `consortium` dataset
-    # Then the auth policy effect will be `deny`
-    # def test_user_has_public_access_and_requests_a_consortium_file_expecting_auth_policy_effect_is_deny(self):
-    #     self.assertEqual(True, False)
-    #
-    # # When they request a file from a `protected` dataset
-    # # Then the auth policy effect will be `deny`
-    # def test_user_has_public_access_and_requests_a_protected_file_expecting_auth_policy_effect_is_deny(self):
-    #     self.assertEqual(True, False)
+    def test_a_token_is_not_present_with_a_request_for_a_consortium_file_expecting_status_code_401(self):
+        result = lambda_handler(consortium_dataset_with_no_token, None)
+        self.assertEqual(401, result['statusCode'])
 
-
-# Given the user passes a valid groups token
-# Given they have `consortium` access level in the group which the dataset belongs to
-class TheUserHasConsortiumAccessLevel(unittest.TestCase):
-    pass
-    # When they request a file from a `public` dataset
-    # Then the auth policy effect will be `allow`
-    # def test_user_has_consortium_access_and_requests_a_public_file_expecting_auth_policy_effect_is_allow(self):
-    #     self.assertEqual(True, False)
-    #
-    # # When they request a file from a `consortium` dataset
-    # # Then the auth policy effect will be `allow`
-    # def test_user_has_consortium_access_and_requests_a_consortium_file_expecting_auth_policy_effect_is_allow(self):
-    #     self.assertEqual(True, False)
-    #
-    # # When they request a file from a `protected` dataset
-    # # Then the auth policy effect will be `deny`
-    # def test_user_has_consortium_access_and_requests_a_protected_file_expecting_auth_policy_effect_is_deny(self):
-    #     self.assertEqual(True, False)
-
-
-# Given the user passes a valid groups token
-# Given they have a `protected` access level in the group which the dataset belongs to
-class TheUserHasProtectedAccessLevel(unittest.TestCase):
-    pass
-    # When they request a file from a `public` dataset
-    # Then the auth policy effect will be `allow`
-    # def test_user_has_protected_access_and_requests_a_public_file_expecting_auth_policy_effect_is_allow(self):
-    #     self.assertEqual(True, False)
-    #
-    # # When they request a file from a `consortium` dataset
-    # # Then the auth policy effect will be `allow`
-    # def test_user_has_protected_access_and_requests_a_consortium_file_expecting_auth_policy_effect_is_allow(self):
-    #     self.assertEqual(True, False)
-    #
-    # # When they request a file from a `protected` dataset
-    # # Then the auth policy effect will be `allow`
-    # def test_user_has_protected_access_and_requests_a_protected_file_expecting_auth_policy_effect_is_allow(self):
-    #     self.assertEqual(True, False)
+    def test_a_request_for_protected_file_expecting_status_code_403(self):
+        result = lambda_handler(protected_dataset_with_consortium_token, None)
+        self.assertEqual(403, result['statusCode'])
 
 
 if __name__ == '__main__':
