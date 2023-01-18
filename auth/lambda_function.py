@@ -13,6 +13,8 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 GLOBUS_APP_CLIENT_ID = os.environ['GLOBUS_APP_CLIENT_ID']
 GLOBUS_APP_CLIENT_SECRET = os.environ['GLOBUS_APP_CLIENT_SECRET']
 ENTITY_API_URL = os.environ['ENTITY_API_URL']
+ENTITY_API_PUBLIC_IP = os.environ['ENTITY_API_PUBLIC_IP']
+ENTITY_API_PRIVATE_IP = os.environ['ENTITY_API_PRIVATE_IP']
 UUID_API_URL = os.environ['UUID_API_URL']
 
 # Initialize AuthHelper class and ensure singleton
@@ -38,8 +40,7 @@ def enable_local_logging():
     is_local_logging = True
 
 
-def log_lambda_event(event):
-    print('Logging event ...')
+def log_message(event):
     if is_local_logging:
         print(json.dumps(event, indent=4))
     else:
@@ -51,30 +52,30 @@ def log_lambda_event(event):
 
 def lambda_handler(event, context):
     print('Starting file-assets authorization ...')
-    log_lambda_event(event)
+    print('Logging event ...')
+    log_message(event)
 
     headers = event['headers']
     x_original_uri_ = event['headers']['x-original-uri']
     path = x_original_uri_.strip('/')
     ok_response = {
-                "statusCode": 200,
-                "headers": {
-                    "Content-Type": "application/json",
-                    "x-original-uri": x_original_uri_
-                }
-            }
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
     unauthenticated_response = {
-                "statusCode": 401,
-                "headers": {
-                    "Content-Type": "application/json"
-                }
-            }
+        "statusCode": 401,
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
     unauthorized_response = {
-                "statusCode": 403,
-                "headers": {
-                    "Content-Type": "application/json"
-                }
-            }
+        "statusCode": 403,
+        "headers": {
+            "Content-Type": "application/json"
+        }
+    }
 
     # Handle requests to /
     if len(path) == 0:
@@ -106,18 +107,22 @@ def lambda_handler(event, context):
     print('Dataset ID: ' + dataset_id)
     print('File name: ' + file_name)
 
-    entity_response = make_api_request_get(ENTITY_API_URL + '/entities/' + dataset_id)
-    # print(json.dumps(entity_response.json(), indent=2))
-    # data_access_level = 'consortium'
+    print('ENTITY_API_PRIVATE_IP: ', ENTITY_API_PRIVATE_IP)
+    entity_response = make_api_request_get(ENTITY_API_PRIVATE_IP + '/entities/' + dataset_id)
+    print('ENTITY RESPONSE')
+    log_message(entity_response.json())
+
     data_access_level = entity_response.json()['data_access_level']
     print(f'Data access level of dataset_id: {dataset_id} is {data_access_level}')
 
     if data_access_level == 'consortium':
         if token is None:
+            print('Requested access to a consortium level dataset but no token was present')
             return unauthenticated_response
+        print('HAS READ PRIVS RESPONSE')
         response = auth_helper_instance.has_read_privs(token)
         if isinstance(response, Response):
-            print('Invalid token')
+            print('Invalid token. It could be expired.')
             return unauthenticated_response
         if response:
             print('Token has read or write privs')
@@ -126,6 +131,7 @@ def lambda_handler(event, context):
             print('Token does not have read or write privs')
             return unauthorized_response
     elif data_access_level == 'protected':
+        print('Files from protected datasets are not available')
         return unauthorized_response
     else:
         return ok_response

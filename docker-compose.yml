@@ -17,3 +17,10 @@ services:
       start_period: 40s
     init: true
     restart: always
+    networks:
+      - sennet_docker_network
+
+networks:
+  # This is the network created by gateway to enable communication between multiple docker-compose projects
+  sennet_docker_network:
+    external: true
